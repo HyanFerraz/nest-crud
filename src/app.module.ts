@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from './config';
-import { UserModule } from './common/modules';
+import { ProductModule, UserModule } from './common/modules';
 @Module({
   imports: [
     // Global variables configuration
@@ -19,6 +19,7 @@ import { UserModule } from './common/modules';
     }),
     // Importing common module
     UserModule,
+    ProductModule,
   ],
 })
 export class AppModule {}
