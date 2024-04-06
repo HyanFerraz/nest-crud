@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -25,7 +27,12 @@ export class ProductController {
 
   @Get(':id')
   async getProductById(@Param() { id }: any) {
-    return await this.productService.findOneById(id);
+    const product = await this.productService.findOneById(id);
+    if (product) {
+      return product;
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('create')
@@ -42,17 +49,28 @@ export class ProductController {
     @Param() { id }: any,
     @Body() updateProduct: UpdateProductDto,
   ) {
-    await this.productService.updateById(id, updateProduct);
-    return {
-      message: `product ${id} updated`,
-    };
+    const updatedProduct = await this.productService.updateById(
+      id,
+      updateProduct,
+    );
+    if (updatedProduct.affected != 0) {
+      return {
+        message: `product ${id} updated`,
+      };
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete('delete/:id')
   async deleteProduct(@Param() { id }: any) {
-    await this.productService.deleteById(id);
-    return {
-      message: `product ${id} deleted`,
-    };
+    const deletedProduct = await this.productService.deleteById(id);
+    if (deletedProduct.affected != 0) {
+      return {
+        message: `product ${id} deleted`,
+      };
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 }

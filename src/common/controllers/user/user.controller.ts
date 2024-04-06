@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -20,31 +22,48 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param() { id }: any) {
-    return await this.userService.findOneById(id);
+    const user = await this.userService.findOneById(id);
+    if (user) {
+      return user;
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('create')
   async createUser(@Body() user: CreateUserDto) {
     const createdUser = await this.userService.create(user);
-    return {
-      message: `created user`,
-      createdUser,
-    };
+    if (createdUser) {
+      return {
+        message: `created user`,
+        createdUser,
+      };
+    } else {
+      throw new HttpException('User Already Exists', HttpStatus.CONFLICT);
+    }
   }
 
   @Put('update/:id')
   async updateUser(@Param() { id }: any, @Body() updateUser: UpdateUserDto) {
-    await this.userService.updateById(id, updateUser);
-    return {
-      message: `user ${id} updated`,
-    };
+    const updatedUser = await this.userService.updateById(id, updateUser);
+    if (updatedUser.affected != 0) {
+      return {
+        message: `user ${id} updated`,
+      };
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete('delete/:id')
   async deleteUser(@Param() { id }: any) {
-    await this.userService.deleteById(id);
-    return {
-      message: `User ${id} deleted`,
-    };
+    const deletedUser = await this.userService.deleteById(id);
+    if (deletedUser.affected != 0) {
+      return {
+        message: `User ${id} deleted`,
+      };
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
   }
 }

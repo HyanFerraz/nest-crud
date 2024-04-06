@@ -7,6 +7,6 @@ export const configuration = () => ({
     username: process.env.DB_USER || 'username',
     password: process.env.DB_PASSWORD || 'password',
     database: process.env.DB_NAME || 'dbname',
-    entities: [`${__dirname}/../entity/**/*.{js,ts}`],
+    entities: [`${__dirname}/../../entity/**/*.{js,ts}`],
   },
 });
