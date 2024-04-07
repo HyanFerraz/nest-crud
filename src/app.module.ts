@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from './config';
-import { ProductModule, UserModule } from './common/modules';
+import { dbConfig } from './config';
+import { AuthModule, ProductModule, UserModule } from './common/modules';
+import { jwtConfig } from './config/jwt';
+
 @Module({
   imports: [
     // Global variables configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
+      load: [dbConfig, jwtConfig],
     }),
     // Database connection
     TypeOrmModule.forRootAsync({
@@ -20,6 +22,7 @@ import { ProductModule, UserModule } from './common/modules';
     // Importing common module
     UserModule,
     ProductModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -9,8 +9,10 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from 'src/common/dto';
+import { JwtGuard } from 'src/common/guards';
 import { ProductService } from 'src/common/providers';
 
 @Controller('product')
@@ -35,6 +37,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Post('create')
   async createProduct(@Body() product: CreateProductDto) {
     const createdProduct = await this.productService.create(product);
@@ -44,6 +47,7 @@ export class ProductController {
     };
   }
 
+  @UseGuards(JwtGuard)
   @Put('update/:id')
   async updateProduct(
     @Param() { id }: any,
@@ -62,6 +66,7 @@ export class ProductController {
     }
   }
 
+  @UseGuards(JwtGuard)
   @Delete('delete/:id')
   async deleteProduct(@Param() { id }: any) {
     const deletedProduct = await this.productService.deleteById(id);

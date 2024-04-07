@@ -1,4 +1,4 @@
-export const configuration = () => ({
+export const dbConfig = () => ({
   db: {
     type: process.env.DB_TYPE || 'mysql',
     synchronize: true,
